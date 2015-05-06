@@ -1,2 +1,4 @@
-# hawkeyeslides
-Crowdsourcing metadata for Hawkeye athletic slides
+Scriptus
+========
+
+Omeka plugin for DIY History to perform transcription actions

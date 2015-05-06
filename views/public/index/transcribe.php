@@ -46,8 +46,8 @@
 	   		<a href="http://s-lib018.lib.uiowa.edu/omeka" alt="Home"><span class="glyphicon glyphicon-home"></span>home</a>
 	   		<br /><br />
 	   		<ul>
-	   			<li><?php echo '<p><span class="fa fa-file-text fa-lg"></span><strong>' . $this->dc_file_title . '</strong></p>'; ?></li>
-	   			<li><?php echo '<p><span class="fa fa-book fa-lg"></span>' . $this->dc_item_link . "</p>"; ?></li>
+	   			<li><?php echo '<p><span class="fa fa-file-text fa-lg"></span><strong>' . $this->file_title . '</strong></p>'; ?></li>
+	   			<li><?php echo '<p><span class="fa fa-book fa-lg"></span>' . $this->item_link . "</p>"; ?></li>
 	   			<li><?php echo '<p><span class="fa fa-archive fa-lg"></span>' . $this->collection_link . "</p>"; ?></li>
    			</ul>
 
