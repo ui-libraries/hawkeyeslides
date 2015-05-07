@@ -20,6 +20,8 @@
 	.smooth_zoom_icons {
 		background-image: url(../../plugins/Scriptus/views/public/index/img/icons.png);
 	}
+
+
 </style>
 
 
@@ -41,25 +43,17 @@
 
 		<img id="ImageID" src="<?php echo $this->imageUrl; ?>"/>	
 
-		<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom cbp-spmenu-open" id="cbp-spmenu-2">
-			
-	   		<a href="http://s-lib018.lib.uiowa.edu/omeka" alt="Home"><span class="glyphicon glyphicon-home"></span>home</a>
-	   		<br /><br />
-	   		<ul>
-	   			<li><?php echo '<p><span class="fa fa-file-text fa-lg"></span><strong>' . $this->file_title . '</strong></p>'; ?></li>
-	   			<li><?php echo '<p><span class="fa fa-book fa-lg"></span>' . $this->item_link . "</p>"; ?></li>
-	   			<li><?php echo '<p><span class="fa fa-archive fa-lg"></span>' . $this->collection_link . "</p>"; ?></li>
-   			</ul>
+		<div class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom cbp-spmenu-open" id="cbp-spmenu-2">
+			<div class="row">
+				<?php echo $this->form; ?>
+			</div>
 
-   			<div class="dropdown">
-   				<a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More information<span class="caret"></span></a>
-   			    <ul class="dropdown-menu" role="menu">
-   			      <li><a href="<?php echo $this->idl_link; ?>">digital collection</a></li>
-   			      <li><a href="<?php echo $this->collguide_link; ?>">archival collection guide</a></li>
-   			    </ul>
-   			</div>   			
-			<?php echo $this->form; ?>
-		</nav>	
+			<div class="row">
+				<div class="col-md-6"></div>
+  				<div class="col-md-6">.col-md-6</div>
+			</div>			
+					
+		</div>
 
 
 		<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
@@ -92,6 +86,7 @@
 
 				// get the form data				
 				var formData = {
+					'location'	: $('#locationbox').val(),
 					'transcription'	: $('#transcribebox').val()
 				};
 

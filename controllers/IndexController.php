@@ -12,50 +12,101 @@ class Scriptus_IndexController extends Omeka_Controller_AbstractActionController
     
     public function transcribeAction()
     {
-
-        $scriptus = new Scriptus();
+        $transcription = '';
 
         $itemId = $this->getParam('item');
         $fileId = $this->getParam('file');
+        
+        $item = get_record_by_id('item', $itemId);
+        $file = get_record_by_id('file', $fileId);       
 
-        $scriptus->setRecords($itemId, $fileId);
+        if (!$item || !$file) {
 
-        $item = $scriptus->getItem();        
-        $file = $scriptus->getFile(); 
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);  
 
-        if ($scriptus->isValid($item, $file, $itemId) == false) {
-            throw new Zend_Controller_Action_Exception('This page does not exist', 404);   
-        } 
+        } elseif ($file->item_id != $itemId) {
+
+            throw new Zend_Controller_Action_Exception('This page does not exist', 404);             
+
+        } else {
             
-        set_current_record('item', $item); 
-        $scriptus->setMetadata($item, $file); 
+           set_current_record('item', $item); 
 
-        $this->view->imageUrl = $scriptus->getImageUrl(); 
-        $this->view->transcription = $scriptus->getTranscription();           
-        $this->view->file_title = $scriptus->getFileTitle();            
-        $this->view->item_link = $scriptus->getItemLink();
-        $this->view->collection_link = $scriptus->getCollectionLink(); 
-        $this->view->idl_link = $scriptus->getIdlLink(); 
-        $this->view->collguide_link = $scriptus->getCollguideLink();           
+           //get the path to the file image  
+           $imageUrl = $file->getWebPath('original');           
 
-        $this->view->form = $scriptus->buildForm();    
+           //get the relevant metadata
+           $transcription = metadata($file, array('Scriptus', 'Transcription'));
+           $location = metadata($file, array('Scriptus', 'location'));
+           $dc_file_title = metadata($file, array('Dublin Core', 'Title') );
+           $dc_item_link = link_to($item, 'show', metadata($item, array('Dublin Core', 'Title') )); 
+           $idl_link = metadata($file, array('Dublin Core', 'Source'));
+           $collguide_link = metadata($item, array('Dublin Core', 'Relation'));
+           $collection_link = link_to_collection_for_item();
 
+           //send everything to the view
+           $this->view->imageUrl = $imageUrl;            
+           $this->view->dc_file_title = $dc_file_title;            
+           $this->view->dc_item_link = $dc_item_link;
+           $this->view->collection_link = $collection_link; 
+           $this->view->idl_link = $idl_link; 
+           $this->view->collguide_link = $collguide_link; 
+
+        }   
+
+        //create a new Omeka form
+        $form = new Omeka_Form;         
+        $form->setMethod('post'); 
+
+       $transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');  
+        $locationArea = new Zend_Form_Element_Textarea('locationbox'); 
+
+       $transcriptionArea  ->setRequired(true)       
+                            ->setValue($transcription)
+                            ->setAttrib('cols', 3)
+                            ->setAttrib('rows', 2)
+                            ->setAttrib('class', 'col-md-6')
+                            ->setAttrib('class', 'form-control'); 
+
+        $locationArea     ->setRequired(true)       
+                          ->setValue($location)
+                           ->setAttrib('cols', 3)
+                          ->setAttrib('rows', 2)
+                         ->setAttrib('class', 'col-md-6')
+                          ->setAttrib('class', 'form-control');
+       
+        $form->addElement($transcriptionArea);
+        $form->addElement($locationArea);
+
+        $save = new Zend_Form_Element_Submit('save');
+        $save ->setLabel('Save');
+        $save->setAttrib('class', 'btn btn-primary');
+        $save->setAttrib('data-loading-text', "Saving...");
+        $save->setAttrib('id', 'save-button');
+        $form->addElement($save);
+
+        $this->view->form = $form;         
     }
 
      public function saveAction() 
      {        
+
         //get the record based on URL param
         $fileId = $this->getParam('file');
-        $file = get_record_by_id('file', $fileId);
+        $file = get_record_by_id("file", $fileId);
 
         //get the posted transcription data       
         $request = new Zend_Controller_Request_Http();
-        $transcription = $request->getPost('transcription');        
+        $transcription = $request->getPost('transcription');      
+        $location = $request->getPost('location');   
 
         //save the new transcription data
         $element = $file->getElement('Scriptus', 'Transcription');
+        $element2 = $file->getElement('Scriptus', 'location');
         $file->deleteElementTextsByElementId(array($element->id));
+        $file->deleteElementTextsByElementId(array($element2->id));
         $file->addTextForElement($element, $transcription, false);
+        $file->addTextForElement($element2, $location, false);
     
         $file->save();    
     }

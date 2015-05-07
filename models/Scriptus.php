@@ -29,7 +29,14 @@ class Scriptus extends Omeka_Record_AbstractRecord
 
     public function setMetadata($item, $file) {
     	$this->imageUrl = $file->getWebPath('original');
+
     	$this->transcription = metadata($file, array('Scriptus', 'Transcription'));
+    	$this->location = metadata($file, array('Scriptus', 'location'));
+    	$this->opponent = metadata($file, array('Scriptus', 'opponent'));
+    	$this->playernames = metadata($file, array('Scriptus', 'playernames'));
+    	$this->sport = metadata($file, array('Scriptus', 'sport'));
+    	$this->comments = metadata($file, array('Scriptus', 'comments'));
+
     	$this->file_title = metadata($file, array('Dublin Core', 'Title') );
     	$this->item_link = link_to($item, 'show', metadata($item, array('Dublin Core', 'Title') )); 
     	$this->idl_link = metadata($file, array('Dublin Core', 'Source'));
@@ -43,6 +50,26 @@ class Scriptus extends Omeka_Record_AbstractRecord
 
     public function getTranscription() {
     	return $this->transcription;
+    }
+
+    public function getLocation() {
+    	return $this->location;
+    }
+
+    public function getOpponent() {
+    	return $this->opponent;
+    }
+
+    public function getPlayernames() {
+    	return $this->playernames;
+    }
+
+    public function getSport() {
+    	return $this->sport;
+    }
+
+    public function getComments() {
+    	return $this->comments;
     }
 
     public function getFileTitle() {
@@ -85,14 +112,27 @@ class Scriptus extends Omeka_Record_AbstractRecord
     	$this->form = new Omeka_Form;         
     	$this->form->setMethod('post'); 
 
-    	$transcriptionArea = new Zend_Form_Element_Textarea('transcribebox');  
+    	$transcriptionArea = new Zend_Form_Element_Text('transcribebox');  
+    	$locationArea = new Zend_Form_Element_Text('locationbox');  
 
     	$transcriptionArea  ->setRequired(true)       
     	                    ->setValue($this->transcription)
-    	                    ->setAttrib('class', 'col-xs-12')
+    	                    ->setAttrib('cols', 3)
+                            ->setAttrib('rows', 2)
+    	                    ->setAttrib('class', 'col-md-6')
     	                    ->setAttrib('class', 'form-control');
+
+    	$locationArea  		->setRequired(true)       
+    		                ->setValue($this->location)
+    		                ->setAttrib('cols', 3)
+    	                    ->setAttrib('rows', 2)
+    		                ->setAttrib('class', 'col-md-6')
+    		                ->setAttrib('class', 'form-control');
+
+
     	
     	$this->form->addElement($transcriptionArea);
+    	$this->form->addElement($locationArea);
 
     	$save = new Zend_Form_Element_Submit('save');
     	$save ->setLabel('Save');
