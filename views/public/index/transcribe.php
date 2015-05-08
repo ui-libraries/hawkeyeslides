@@ -46,12 +46,7 @@
 		<div class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom cbp-spmenu-open" id="cbp-spmenu-2">
 			<div class="row">
 				<?php echo $this->form; ?>
-			</div>
-
-			<div class="row">
-				<div class="col-md-6"></div>
-  				<div class="col-md-6">.col-md-6</div>
-			</div>			
+			</div>		
 					
 		</div>
 
@@ -87,7 +82,11 @@
 				// get the form data				
 				var formData = {
 					'location'	: $('#locationbox').val(),
-					'transcription'	: $('#transcribebox').val()
+					'transcription'	: $('#transcribebox').val(),
+					'opponent'	: $('#opponentbox').val(),
+					'playernames'	: $('#playernamesbox').val(),
+					'sport'	: $('#sportbox').val(),
+					'comments'	: $('#commentsbox').val()
 				};
 
 				// process the form
